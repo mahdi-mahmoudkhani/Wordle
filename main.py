@@ -2,8 +2,6 @@
 ALHPHABET = [chr(i) for i in range(97, 123)]
 
 # global variables
-# list of alphabets that are not in the word
-notInLetters = {0: list(), 1: list(), 2: list(), 3: list()}
 # list of alphabets that are not in the correct place
 notInPlaces = {0: list(), 1: list(), 2: list(), 3: list()}
 # list of the guessed letters
@@ -12,7 +10,7 @@ guessedWord = ['0', '0', '0', '0']
 
 def feedbackAnalisys(guessedWord, remaningChances):
     '''
-    Function to get the feedback from the user and update the notInLetters and notInPlaces
+    Function to get the feedback from the user and update the notInPlaces and notInPlaces
     :param guessedWord: list of the guessed word
     :param remaningChances: number of remaning chances
     :return: True if the word is guessed, False otherwise
@@ -26,17 +24,17 @@ def feedbackAnalisys(guessedWord, remaningChances):
         return True
     for index in range(len(feedback)):
         if feedback[index] == '=':
-            # only this letter can be in this place, add all other letters from the notInLetters for this place
+            # only this letter can be in this place, add all other letters from the notInPlaces for this place
             value = ALHPHABET.copy()
             value.remove(guessedWord[index])
-            notInLetters[index] = value
+            notInPlaces[index] = value
         elif feedback[index] == '+':
             # the letter is not in this place, but in the word,
             notInPlaces[index].append(guessedWord[index])
         elif feedback[index] == '-':
             # the letter is not in any place
             for i in range(4):
-                notInLetters[i] += guessedWord[index]
+                notInPlaces[i] += guessedWord[index]
         else:
             print("Invalid Feedback")
             feedbackAnalisys(guessedWord, remaningChances)
@@ -56,9 +54,9 @@ def backtrackingWordle(index):
         return True
     for letter in ALHPHABET:
         # check if the letter is already exist in previous guesses, 
-        # check if the letter is in notInLetters or notInPlaces based on the index
+        # check if the letter is in notInPlaces based on the index
         # find the first suitable letter for the current index from the ALHPHABET
-        if letter in guessedWord or letter in notInLetters[index] or letter in notInPlaces[index]:
+        if letter in guessedWord or letter in notInPlaces[index]:
             continue
         guessedWord[index] = letter
         if backtrackingWordle(index + 1):
